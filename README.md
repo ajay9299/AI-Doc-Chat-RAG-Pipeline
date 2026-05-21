@@ -5,29 +5,48 @@ This project is a Flask application that provides an API for uploading PDF docum
 ## Project Structure
 
 ```
-flask-pdf-api
-├── src
-│   ├── app.py                # Entry point of the Flask application
-│   ├── config.py             # Configuration settings for the application
-│   ├── routes
-│   │   ├── __init__.py       # Initializes the routes module
-│   │   ├── upload.py         # API endpoint for uploading PDF documents
-│   │   └── query.py          # API endpoint for querying processed documents
-│   ├── services
-│   │   ├── __init__.py       # Initializes the services module
-│   │   ├── pdf_processor.py   # Logic for processing uploaded PDF documents
-│   │   └── document_store.py  # Manages storage and retrieval of documents
-│   ├── models
-│   │   ├── __init__.py       # Initializes the models module
-│   │   └── document.py       # Data model for documents
-│   └── utils
-│       ├── __init__.py       # Initializes the utils module
-│       └── validators.py      # Utility functions for input validation
-├── uploads                    # Directory for storing uploaded PDF files
-├── data                       # Directory for additional data files
-├── requirements.txt           # Lists project dependencies
-└── README.md                  # Project documentation
+src/
+├── app.py                   # Application entry point (Flask server start)
+├── config.py                # Configuration settings (env, paths, constants)
+│
+├── routes/                  # API layer (controllers)
+│   ├── __init__.py
+│   ├── upload.py            # PDF upload endpoint
+│   └── query.py             # RAG query endpoint
+│
+├── services/                # Core business logic
+│   ├── __init__.py
+│   ├── pdf_processor.py     # PDF loading, chunking, preprocessing
+│   ├── embedding_service.py # Embeddings generation
+│   ├── vector_store.py      # FAISS vector DB operations
+│   └── rag_service.py       # Retrieval + LLM response generation
+│
+├── models/                  # Data models / schemas
+│   ├── __init__.py
+│   └── document.py
+│
+├── utils/                   # Helper utilities
+│   ├── __init__.py
+│   ├── validators.py
+│   └── logger.py
+│
+│
+│
+uploads/                     # Uploaded PDF files
+│
+├── requirements.txt
+└── README.md
 ```
+
+## ⚙️ How It Works
+
+1. Upload PDF via API
+2. Extract text using PyPDFLoader
+3. Split into chunks
+4. Convert chunks into embeddings
+5. Store in FAISS
+6. Query → retrieve relevant chunks
+7. Send context to LLM → generate answer
 
 ## Setup Instructions
 
@@ -93,7 +112,3 @@ After the container is running, ensure `Config.OLLAMA_BASE_URL` is set to `http:
 - Ensure that the `uploads` directory exists for storing uploaded files.
 - The `data` directory can be used for any additional files needed for processing.
 - Modify the `requirements.txt` file to include any additional libraries as needed.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
